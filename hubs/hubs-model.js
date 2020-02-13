@@ -1,70 +1,71 @@
-const knex = require('knex');
-const config = require('../knexfile.js');
-const db = knex(config.development);
+const knex = require("knex")
+const config = require("../knexfile")
+const db = knex(config.development)
 
 module.exports = {
-  find,
-  findById,
-  add,
-  remove,
-  update,
-  findHubMessages,
-  findMessageById,
-  addMessage,
-};
+	find,
+	findById,
+	add,
+	remove,
+	update,
+	findHubMessages,
+	findHubMessageById,
+	addHubMessage,
+}
 
-function find(query) {
-  const { page = 1, limit = 2, sortby = 'id', sortdir = 'asc' } = query;
-  const offset = limit * (page - 1);
+function find(query = {}) {
+	const { page = 1, limit = 100, sortBy = "id", sortDir = "asc" } = query
+	const offset = limit * (page - 1)
 
-  let rows = db('hubs')
-    .orderBy(sortby, sortdir)
-    .limit(limit)
-    .offset(offset);
-
-  return rows;
+	return db("hubs")
+		.orderBy(sortBy, sortDir)
+		.limit(limit)
+		.offset(offset)
+		.select()
 }
 
 function findById(id) {
-  return db('hubs')
-    .where({ id })
-    .first();
+	return db("hubs")
+		.where({ id })
+		.first()
 }
 
 async function add(hub) {
-  const [id] = await db('hubs').insert(hub);
+	const [id] = await db("hubs").insert(hub)
 
-  return findById(id);
+	return findById(id)
 }
 
 function remove(id) {
-  return db('hubs')
-    .where({ id })
-    .del();
+	return db("hubs")
+		.where({ id })
+		.del()
 }
 
-function update(id, changes) {
-  return db('hubs')
-    .where({ id })
-    .update(changes, '*');
+async function update(id, changes) {
+	await db("hubs")
+		.where({ id })
+		.update(changes)
+
+	return findById(id)
 }
 
 function findHubMessages(hubId) {
-  return db('messages as m')
-    .join('hubs as h', 'm.hub_id', 'h.id')
-    .select('m.id', 'm.text', 'm.sender', 'h.id as hubId', 'h.name as hub')
-    .where({ hub_id: hubId });
+	return db("messages as m")
+		.join("hubs as h", "m.hub_id", "h.id")
+		.where({ hub_id: hubId })
+		.select(["m.id", "m.text", "m.sender", "h.id as hubId", "h.name as hub"])
 }
 
-// You Do
-function findMessageById(id) {
-  return db('messages')
-    .where({ id })
-    .first();
+function findHubMessageById(hubId, id) {
+	return db("messages")
+		.where({ id, hub_id: hubId })
+		.first()
 }
 
-async function addMessage(message) {
-  const [id] = await db('messages').insert(message);
+async function addHubMessage(hubId, message) {
+	const data = { hub_id: hubId, ...message }
+	const [id] = await db("messages").insert(data)
 
-  return findMessageById(id);
+	return findHubMessageById(hubId, id)
 }
