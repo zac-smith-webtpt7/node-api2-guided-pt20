@@ -24,7 +24,7 @@ server.get("/api/hubs", (req, res) => {
 		.then((hubs) => {
 			res.status(200).json(hubs)
 		})
-		.catch(error => {
+		.catch((error) => {
 			console.log(error)
 			res.status(500).json({
 				message: "Error retrieving the hubs",
@@ -43,7 +43,7 @@ server.get("/api/hubs/:id", (req, res) => {
 				})
 			}
 		})
-		.catch(error => {
+		.catch((error) => {
 			console.log(error)
 			res.status(500).json({
 				message: "Error retrieving the hub",
@@ -62,7 +62,7 @@ server.post("/api/hubs", (req, res) => {
 		.then((hub) => {
 			res.status(201).json(hub)
 		})
-		.catch(error => {
+		.catch((error) => {
 			console.log(error)
 			res.status(500).json({
 				message: "Error adding the hub",
@@ -87,7 +87,7 @@ server.put("/api/hubs/:id", (req, res) => {
 				})
 			}
 		})
-		.catch(error => {
+		.catch((error) => {
 			console.log(error)
 			res.status(500).json({
 				message: "Error updating the hub",
@@ -108,7 +108,7 @@ server.delete("/api/hubs/:id", (req, res) => {
 				})
 			}
 		})
-		.catch(error => {
+		.catch((error) => {
 			console.log(error)
 			res.status(500).json({
 				message: "Error removing the hub",
