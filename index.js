@@ -1,5 +1,5 @@
 const express = require("express")
-const hubs = require("./hubs/hubs-model")
+const users = require("./users/users-model")
 
 const server = express()
 const port = 4000
@@ -7,117 +7,110 @@ const port = 4000
 server.use(express.json())
 
 server.get("/", (req, res) => {
-	res.send(`
-		<h1>Lambda Hubs API</h1>
-		<p>Welcome to the Lambda Hubs API</p>
-	`)
-})
-
-server.get("/api", (req, res) => {
 	res.json({
-		message: "Welcome to the Hubs API",
+		message: "Welcome to our API",
 	})
 })
 
-server.get("/api/hubs", (req, res) => {
-	hubs.find()
-		.then((hubs) => {
-			res.status(200).json(hubs)
+server.get("/users", (req, res) => {
+	users.find()
+		.then((users) => {
+			res.status(200).json(users)
 		})
 		.catch((error) => {
 			console.log(error)
 			res.status(500).json({
-				message: "Error retrieving the hubs",
+				message: "Error retrieving the users",
 			})
 		})
 })
 
-server.get("/api/hubs/:id", (req, res) => {
-	hubs.findById(req.params.id)
-		.then((hub) => {
-			if (hub) {
-				res.status(200).json(hub)
+server.get("/users/:id", (req, res) => {
+	users.findById(req.params.id)
+		.then((user) => {
+			if (user) {
+				res.status(200).json(user)
 			} else {
 				res.status(404).json({
-					message: "Hub not found",
+					message: "User not found",
 				})
 			}
 		})
 		.catch((error) => {
 			console.log(error)
 			res.status(500).json({
-				message: "Error retrieving the hub",
+				message: "Error retrieving the user",
 			})
 		})
 })
 
-server.post("/api/hubs", (req, res) => {
-	if (!req.body.name) {
+server.post("/users", (req, res) => {
+	if (!req.body.name || !req.body.email) {
 		return res.status(400).json({
-			message: "Missing hub name",
+			message: "Missing user name or email",
 		})
 	}
 
-	hubs.add(req.body)
-		.then((hub) => {
-			res.status(201).json(hub)
+	users.add(req.body)
+		.then((user) => {
+			res.status(201).json(user)
 		})
 		.catch((error) => {
 			console.log(error)
 			res.status(500).json({
-				message: "Error adding the hub",
+				message: "Error adding the user",
 			})
 		})
 })
 
-server.put("/api/hubs/:id", (req, res) => {
-	if (!req.body.name) {
+server.put("/users/:id", (req, res) => {
+	if (!req.body.name || !req.body.email) {
 		return res.status(400).json({
-			message: "Missing hub name",
+			message: "Missing user name or email",
 		})
 	}
 
-	hubs.update(req.params.id, req.body)
-		.then((hub) => {
-			if (hub) {
-				res.status(200).json(hub)
+	users.update(req.params.id, req.body)
+		.then((user) => {
+			if (user) {
+				res.status(200).json(user)
 			} else {
 				res.status(404).json({
-					message: "The hub could not be found",
+					message: "The user could not be found",
 				})
 			}
 		})
 		.catch((error) => {
 			console.log(error)
 			res.status(500).json({
-				message: "Error updating the hub",
+				message: "Error updating the user",
 			})
 		})
 })
 
-server.delete("/api/hubs/:id", (req, res) => {
-	hubs.remove(req.params.id)
+server.delete("/users/:id", (req, res) => {
+	users.remove(req.params.id)
 		.then((count) => {
 			if (count > 0) {
 				res.status(200).json({
-					message: "The hub has been nuked",
+					message: "The user has been nuked",
 				})
 			} else {
 				res.status(404).json({
-					message: "The hub could not be found",
+					message: "The user could not be found",
 				})
 			}
 		})
 		.catch((error) => {
 			console.log(error)
 			res.status(500).json({
-				message: "Error removing the hub",
+				message: "Error removing the user",
 			})
 		})
 })
 
-// add an endpoint that returns all the messages for a hub
-// add an endpoint for adding new message to a hub
+// create endpoint that returns all the posts for a user
+// create endpoint for adding a new post for a user
 
 server.listen(port, () => {
 	console.log(`Server running at http://localhost:${port}`)
