@@ -1,4 +1,4 @@
-# Node API 2 Guided Project
+# Server-Side Routing with Express
 
 Guided project for **Node API 2** module.
 
