@@ -110,6 +110,7 @@ server.delete("/users/:id", (req, res) => {
 })
 
 // create endpoint that returns all the posts for a user
+// create endpoint that returns a single post for a user
 // create endpoint for adding a new post for a user
 
 server.listen(port, () => {
