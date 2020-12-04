@@ -118,6 +118,43 @@ router.get('/users/:id/posts', (req, res) => {
     })
 })
 // create endpoint that returns a single post for a user
+router.get('/users/:id/posts/:post_id', (req, res) => {
+  users
+    .findUserPostById(req.params.id, req.params.post_id)
+    .then((post) => {
+      if (post) {
+        res.json(post)
+      } else {
+        res.status(404).json({
+          message: 'post was not found',
+        })
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({
+        message: 'cound not get user post',
+      })
+    })
+})
 // create endpoint for adding a new post for a user
+router.post('/users/:id/posts', (req, res) => {
+  if (!req.body.text) {
+    return res.status(400).json({
+      message: 'need a text value',
+    })
+  }
+  users
+    .addUserPost(req.params.id, req.body)
+    .then((newPost) => {
+      res.status(201).json(newPost)
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({
+        message: 'could not create post',
+      })
+    })
+})
 
 module.exports = router
