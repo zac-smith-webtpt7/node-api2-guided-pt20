@@ -104,6 +104,19 @@ router.delete('/users/:id', (req, res) => {
 })
 
 // create endpoint that returns all the posts for a user
+router.get('/users/:id/posts', (req, res) => {
+  users
+    .findUserPosts(req.params.id)
+    .then((posts) => {
+      res.json(posts)
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({
+        message: 'could not get user posts',
+      })
+    })
+})
 // create endpoint that returns a single post for a user
 // create endpoint for adding a new post for a user
 
