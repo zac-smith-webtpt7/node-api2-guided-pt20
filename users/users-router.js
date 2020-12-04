@@ -2,8 +2,10 @@ const router = require('express').Router()
 const users = require('./users-model')
 
 router.get('/users', (req, res) => {
+  console.log(req.query)
+
   users
-    .find()
+    .find(req.query)
     .then((users) => {
       res.status(200).json(users)
     })
